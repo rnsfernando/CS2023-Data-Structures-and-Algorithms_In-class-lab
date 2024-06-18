@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Function to perform quicksort on a vector of integers
+vector<int> quickSort(vector<int> arr) {
+    // Get the length of the array
+    int len = arr.size();
+
+    // Base case: if the array has 1 or fewer elements, it is already sorted
+    if (len <= 1)
+        return arr;
+
+    // Choose the first element of the array as the pivot
+    int pivot = arr[0];
+    vector<int> left, right, equal;
+
+    // Partition the array into three parts: elements less than the pivot, equal to the pivot, and greater than the pivot
+    for (int i = 0; i < len; i++) {
+        if (arr[i] < pivot){
+            left.push_back(arr[i]); // Elements less than the pivot go to the left partition
+        }
+        else if (arr[i] > pivot){
+            right.push_back(arr[i]); // Elements greater than the pivot go to the right partition
+        }
+        else{
+            equal.push_back(arr[i]); // Elements equal to the pivot go to the equal partition
+        }
+    }
+    
+    // Concatenate the left, equal, and right partitions to form the sorted array
+    left.insert(left.end(), equal.begin(), equal.end());
+    left.insert(left.end(), right.begin(), right.end());
+    return left; // Return the sorted array
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    // Read the input array
+    vector<int> arr(n);
+    for (int i = 0; i < n; ++i) {
+        cin >> arr[i];
+    }
+
+    // Sort the array using quicksort
+    vector<int> sortedArr = quickSort(arr);
+
+    // Display the sorted array
+    int new_len = sortedArr.size();
+    for (int i = 0; i < new_len; ++i) {
+        cout << sortedArr[i] << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
