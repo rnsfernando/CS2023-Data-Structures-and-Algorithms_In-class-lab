@@ -1,0 +1,71 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node *left, *right;
+
+    // Constructor to initialize the Node with a value
+    Node(int x) {
+        data = x;
+        left = right = nullptr;
+    }
+};
+
+class BinarySearchTree {
+public:
+    // Function to insert a new node with a given value into the binary search tree
+    Node* insert(Node* root, int value) {
+        // If the tree is empty, create a new node and return it as the root
+        if (root == nullptr)
+            return new Node(value);
+        // If the value is less than the root, insert it into the left subtree
+        if (value < root->data)
+            root->left = insert(root->left, value);
+        // If the value is greater than or equal to the root, insert it into the right subtree
+        else
+            root->right = insert(root->right, value);
+        return root;
+    }
+
+    // Function to find the Lowest Common Ancestor (LCA) of two nodes in the binary search tree using recursion
+    Node* lca(Node* root, int value1, int value2) {
+        // If the root is NULL or if both values are less than or greater than the root, return NULL
+        if (root == nullptr)
+            return nullptr;
+        // If both values are less than the root, search in the left subtree
+        if (value1 < root->data && value2 < root->data)
+            return lca(root->left, value1, value2);
+        // If both values are greater than the root, search in the right subtree
+        else if (value1 > root->data && value2 > root->data)
+            return lca(root->right, value1, value2);
+        // If one value is less than the root and the other is greater, or if one value is equal to the root,
+        // then the root is the LCA
+        else
+            return root;
+    }
+};
+
+int main() {
+    BinarySearchTree bst;
+    Node* root = nullptr;
+    int n;
+    cin >> n;
+    // Insert n nodes into the binary search tree
+    for (int i = 0; i < n; i++) {
+        int value;
+        cin >> value;
+        root = bst.insert(root, value);
+    }
+    // Input the values for which LCA needs to be found
+    int targetValue1, targetValue2;
+    cin >> targetValue1 >> targetValue2;
+
+    // Find the LCA of the given values using recursion
+    Node* resultRecursive = bst.lca(root, targetValue1, targetValue2);
+    // Output the value of the LCA
+    cout << resultRecursive->data << endl;
+
+    return 0;
+}
