@@ -1,0 +1,76 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+// Function to decrease the key of an element in the heap
+void heapDecreaseKey(vector<int>& arr, int index, int key) {
+    arr[index] = key;
+    while (arr[index / 2] > key && index > 0) {
+        swap(arr[index / 2], arr[index]);
+        index = index / 2;
+    }    
+}
+
+// Function to insert an element into the heap
+void insert(vector<int>& arr, int key) {
+    arr.push_back(numeric_limits<int>::infinity()); // Push positive infinity
+    heapDecreaseKey(arr, arr.size() - 1, key);   // Decrease the key of the newly inserted element
+}
+
+// Function to perform min-heapify operation
+void minHeapify(vector<int>& arr, int index) {
+    int len = arr.size();
+    int lowest = index;
+    int l = 2 * index;
+    int r = 2 * index + 1;
+    // Check if the left child is smaller than the current node
+    if (l < len && arr[index] > arr[l]) {
+        lowest = l;
+    }
+    // Check if the right child is smaller than the current node and the left child
+    if (r < len && arr[lowest] > arr[r]) {
+        lowest = r;
+    }
+    // If the smallest element is not the current node, swap with the smallest child and continue min-heapify
+    if (index != lowest) {
+        swap(arr[index], arr[lowest]);
+        minHeapify(arr, lowest);
+    }
+}
+
+// Function to build a min-heap from an array
+void buildMinHeap(vector<int>& arr) {
+    int len = arr.size();
+    // Start from the last non-leaf node and perform min-heapify on each node
+    for (int i = len / 2; i >= 0; i--) {
+        minHeapify(arr, i);
+    }
+}
+
+int main() {
+    vector<int> arr;
+    int q;
+    cin >> q; // Input the number of queries
+    // Process each query
+    for (int i = 0; i < q; i++) {
+        int a, b;
+        cin >> a; // Input the query type
+        if (a == 3) {
+            buildMinHeap(arr); // Build min-heap if the query type is 3
+            cout << arr[0] << endl; // Output the minimum element in the heap
+        }
+        else {
+            cin >> b; // Input the element to be inserted/deleted
+            if (a == 1) {
+                insert(arr, b); // Insert element into the heap if the query type is 1
+            }
+            else {
+                arr.erase(remove(arr.begin(), arr.end(), b), arr.end()); // Remove element from the heap if the query type is 2
+            }
+        }   
+    }
+    return 0;
+}
